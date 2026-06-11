@@ -43,7 +43,7 @@ function App() {
       <div className="min-h-screen bg-slate-950 text-slate-100 dark">
         <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/90 backdrop-blur-xl">
           <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
-            <a href="/" className="text-xl font-bold tracking-wide text-cyan-300">DSAFlow</a>
+            <a href="/" className="text-xl font-bold tracking-wide text-cyan-300">VisualDSA</a>
             <div className="hidden items-center gap-6 lg:flex">
               {navItems.map(({ to, label, icon: Icon }) => (
                 <NavLink
