@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const API = 'http://localhost:5000/api';
+import { API_BASE } from '../config/api';
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ export default function AuthPage() {
     setLoading(true);
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
-      const response = await fetch(`${API}${endpoint}`, {
+      const response = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

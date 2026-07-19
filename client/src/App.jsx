@@ -12,11 +12,14 @@ import TreeVisualizer from './pages/TreeVisualizer';
 import GraphVisualizer from './pages/GraphVisualizer';
 import ModulesPage from './pages/ModulesPage';
 import AuthPage from './pages/AuthPage';
+import ProblemsPage from './pages/ProblemsPage';
+import ProblemDetailPage from './pages/ProblemDetailPage';
 
 const navItems = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/learning', label: 'Learning', icon: BookOpen },
-  { to: '/sorting', label: 'Sorting', icon: Code2 },
+  { to: '/problems', label: 'Problems', icon: Code2 },
+  { to: '/sorting', label: 'Sorting', icon: Search },
   { to: '/searching', label: 'Searching', icon: Search },
   { to: '/linked-list', label: 'Linked List', icon: BookOpen },
   { to: '/stack', label: 'Stack', icon: Boxes },
@@ -77,7 +80,9 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/learning" element={<LearningPage />} />
-            <Route path="/practice" element={<PracticePage />} />
+            <Route path="/practice" element={<Navigate to="/problems" replace />} />
+            <Route path="/problems" element={<ProblemsPage />} />
+            <Route path="/problems/:slug" element={<ProblemDetailPage />} />
             <Route path="/sorting" element={<SortingPage />} />
             <Route path="/visualizers/sorting/:algorithm" element={<SortingVisualizerPage />} />
             <Route path="/searching" element={<SearchingPage />} />
@@ -106,7 +111,7 @@ function HomePage() {
         <p className="mt-4 max-w-xl text-slate-300">Explore arrays, trees, graphs, recursion, DP, and coding challenges in a polished platform designed for students and mentors.</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="/learning" className="rounded-full bg-cyan-400 px-5 py-3 font-semibold text-slate-950">Start Learning</a>
-          <a href="/practice" className="rounded-full border border-slate-700 px-5 py-3 font-semibold text-slate-100">Solve Problems</a>
+          <a href="/problems" className="rounded-full border border-slate-700 px-5 py-3 font-semibold text-slate-100">Solve Problems</a>
         </div>
       </div>
       <div className="rounded-3xl border border-slate-800 bg-gradient-to-br from-cyan-400/10 to-violet-500/10 p-8">
@@ -164,25 +169,6 @@ function LearningPage() {
   );
 }
 
-function PracticePage() {
-  return (
-    <section className="space-y-6">
-      <h2 className="text-3xl font-bold text-white">Coding Practice</h2>
-      <div className="grid gap-6 lg:grid-cols-[1fr_0.6fr]">
-        <div className="space-y-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
-          <h3 className="text-xl font-semibold text-white">Problem List</h3>
-          {['Two Sum', 'Binary Search', 'Longest Increasing Subsequence', 'Graph BFS'].map((problem, index) => <article key={problem} className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4"><p className="text-sm text-cyan-300">Easy · Arrays</p><h4 className="text-lg font-semibold text-white">{problem}</h4><p className="text-slate-300">Includes examples, constraints, explanations, and Java/C++/JavaScript templates.</p></article>) }
-        </div>
-        <aside className="space-y-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
-          <h3 className="text-xl font-semibold text-white">Filters</h3>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 text-slate-200">Difficulty: Easy · Medium · Hard</div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 text-slate-200">Tags: Arrays, Trees, Graphs, DP</div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 text-slate-200">Languages: Java · C++ · JavaScript</div>
-        </aside>
-      </div>
-    </section>
-  );
-}
 
 function DashboardPage() {
   const [completedTopics, setCompletedTopics] = useState(() => {

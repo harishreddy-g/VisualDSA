@@ -6,6 +6,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { connectDB } from '../config/db.js';
+import { getRedis } from '../config/redis.js';
+import { reindexAllProblems } from '../config/solr.js';
+import { seedProblems } from './utils/seed.js';
 import authRoutes from './routes/authRoutes.js';
 import topicRoutes from './routes/topicRoutes.js';
 import problemRoutes from './routes/problemRoutes.js';
@@ -24,16 +27,32 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', service: 'DSAFlow API' }));
+app.get('/api/health', (_req, res) => res.json({
+  status: 'ok',
+  service: 'DSAFlow API',
+  redis: Boolean(process.env.REDIS_URL),
+  solr: Boolean(process.env.SOLR_URL),
+  openai: Boolean(process.env.OPENAI_API_KEY),
+}));
+
 app.use('/api/auth', authRoutes);
 app.use('/api/topics', topicRoutes);
 app.use('/api/problems', problemRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/admin', adminRoutes);
 
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ message: err.message || 'Internal server error' });
+});
+
 const start = async () => {
   try {
     await connectDB();
+    await getRedis();
+
+    const problems = await seedProblems();
+    await reindexAllProblems(problems);
 
     const listen = (port) => {
       const server = app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
