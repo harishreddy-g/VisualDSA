@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,16 +7,54 @@
 :root {
   color: #e5eefb;
   background-color: #020617;
-  font-family: Inter, Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+code, pre, textarea.code-editor {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(56, 189, 248, 0.08), transparent 25%),
-    linear-gradient(180deg, #020617 0%, #111827 50%, #020617 100%);
+    radial-gradient(ellipse at top, rgba(56, 189, 248, 0.07), transparent 30%),
+    radial-gradient(ellipse at bottom-right, rgba(139, 92, 246, 0.05), transparent 40%),
+    linear-gradient(180deg, #020617 0%, #0c1120 50%, #020617 100%);
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.6);
+  outline-offset: 2px;
+}
+
+/* Smooth page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms, transform 200ms;
+}

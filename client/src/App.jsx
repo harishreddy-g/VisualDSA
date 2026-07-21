@@ -1,7 +1,11 @@
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Home, BookOpen, Code2, BarChart3, Shield, Moon, Sun, Menu, Search, Boxes } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { Routes, Route, NavLink, Navigate, Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Home, BookOpen, Code2, BarChart3, Shield, Sun, Moon, Menu, X,
+  Layers, ChevronDown, LogOut, User, Boxes
+} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+
 import SortingPage from './pages/SortingPage';
 import SortingVisualizerPage from './pages/SortingVisualizerPage';
 import SearchingPage from './pages/SearchingPage';
@@ -14,152 +18,53 @@ import ModulesPage from './pages/ModulesPage';
 import AuthPage from './pages/AuthPage';
 import ProblemsPage from './pages/ProblemsPage';
 import ProblemDetailPage from './pages/ProblemDetailPage';
+import HomePage from './pages/HomePage';
+import DashboardPage from './pages/DashboardPage';
+import AdminPage from './pages/AdminPage';
+import NotFoundPage from './pages/NotFoundPage';
 
-const navItems = [
-  { to: '/', label: 'Home', icon: Home },
-  { to: '/learning', label: 'Learning', icon: BookOpen },
-  { to: '/problems', label: 'Problems', icon: Code2 },
-  { to: '/sorting', label: 'Sorting', icon: Search },
-  { to: '/searching', label: 'Searching', icon: Search },
-  { to: '/linked-list', label: 'Linked List', icon: BookOpen },
-  { to: '/stack', label: 'Stack', icon: Boxes },
-  { to: '/queue', label: 'Queue', icon: Boxes },
-  { to: '/trees', label: 'Trees', icon: Boxes },
-  { to: '/graphs', label: 'Graphs', icon: Boxes },
-  { to: '/modules', label: 'Modules', icon: Boxes },
-  { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-  { to: '/auth', label: 'Auth', icon: Shield },
-  { to: '/admin', label: 'Admin', icon: Shield },
-];
-
-function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/auth" replace />;
-}
-
-function App() {
-  const [dark, setDark] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  return (
-    <div className={dark ? 'dark' : ''}>
-      <div className="min-h-screen bg-slate-950 text-slate-100 dark">
-        <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/90 backdrop-blur-xl">
-          <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
-            <a href="/" className="text-xl font-bold tracking-wide text-cyan-300">VisualDSA</a>
-            <div className="hidden items-center gap-6 lg:flex">
-              {navItems.map(({ to, label, icon: Icon }) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-full px-3 py-2 text-sm ${
-                      isActive ? 'bg-cyan-400/10 text-cyan-200' : 'text-slate-300 hover:text-white'
-                    }`
-                  }
-                >
-                  <Icon size={16} /> {label}
-                </NavLink>
-              ))}
-            </div>
-            <div className="flex items-center gap-3">
-              <button onClick={() => setDark(!dark)} className="rounded-full border border-slate-700 bg-slate-900 p-2 text-slate-200">{dark ? <Sun size={16} /> : <Moon size={16} />}</button>
-              <button onClick={() => setMenuOpen(!menuOpen)} className="rounded-full border border-slate-700 bg-slate-900 p-2 text-slate-200 lg:hidden"><Menu size={16} /></button>
-            </div>
-          </nav>
-          {menuOpen && (
-            <div className="border-t border-slate-800 bg-slate-950 p-4 lg:hidden">
-              {navItems.map(({ to, label, icon: Icon }) => (
-                <NavLink key={to} to={to} onClick={() => setMenuOpen(false)} className="mb-2 flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-sm text-slate-200"> <Icon size={16} /> {label}</NavLink>
-              ))}
-            </div>
-          )}
-        </header>
-
-        <main className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-8 lg:px-8">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/learning" element={<LearningPage />} />
-            <Route path="/practice" element={<Navigate to="/problems" replace />} />
-            <Route path="/problems" element={<ProblemsPage />} />
-            <Route path="/problems/:slug" element={<ProblemDetailPage />} />
-            <Route path="/sorting" element={<SortingPage />} />
-            <Route path="/visualizers/sorting/:algorithm" element={<SortingVisualizerPage />} />
-            <Route path="/searching" element={<SearchingPage />} />
-            <Route path="/linked-list" element={<LinkedListVisualizer />} />
-            <Route path="/stack" element={<StackVisualizer />} />
-            <Route path="/queue" element={<QueueVisualizer />} />
-            <Route path="/trees" element={<TreeVisualizer />} />
-            <Route path="/graphs" element={<GraphVisualizer />} />
-            <Route path="/modules" element={<ModulesPage />} />
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
-  );
-}
-
-function HomePage() {
-  return (
-    <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-900/10">
-        <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">Learning + Visualizations + Practice</p>
-        <h1 className="mt-4 max-w-xl text-4xl font-black text-white lg:text-6xl">Master DSA with interactive lessons, visualizers, and progress tracking.</h1>
-        <p className="mt-4 max-w-xl text-slate-300">Explore arrays, trees, graphs, recursion, DP, and coding challenges in a polished platform designed for students and mentors.</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="/learning" className="rounded-full bg-cyan-400 px-5 py-3 font-semibold text-slate-950">Start Learning</a>
-          <a href="/problems" className="rounded-full border border-slate-700 px-5 py-3 font-semibold text-slate-100">Solve Problems</a>
-        </div>
-      </div>
-      <div className="rounded-3xl border border-slate-800 bg-gradient-to-br from-cyan-400/10 to-violet-500/10 p-8">
-        <h2 className="text-xl font-semibold text-white">Platform Snapshot</h2>
-        <ul className="mt-4 space-y-3 text-slate-200">
-          <li>• Interactive roadmap and topic explorer</li>
-          <li>• Sorting, searching, tree, and graph visualizers</li>
-          <li>• Practice problems with hints, samples, and explanations</li>
-          <li>• Dashboard for progress, streaks, and bookmarks</li>
-        </ul>
-      </div>
-    </motion.section>
-  );
-}
+// Inline LearningPage (stays here since it's small)
+import { useMemo } from 'react';
 
 function LearningPage() {
   const topics = useMemo(() => ['Arrays', 'Linked Lists', 'Stack', 'Queue', 'Trees', 'Graphs', 'Hashing', 'Recursion', 'Dynamic Programming'], []);
   const [completedTopics, setCompletedTopics] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('topicProgress') || '{}');
-    } catch {
-      return {};
-    }
+    try { return JSON.parse(localStorage.getItem('topicProgress') || '{}'); } catch { return {}; }
   });
 
   useEffect(() => {
     localStorage.setItem('topicProgress', JSON.stringify(completedTopics));
   }, [completedTopics]);
 
-  const toggleTopic = (topic) => {
-    setCompletedTopics((prev) => ({ ...prev, [topic]: !prev[topic] }));
-  };
+  const toggleTopic = (topic) => setCompletedTopics((prev) => ({ ...prev, [topic]: !prev[topic] }));
+  const completed = topics.filter((t) => completedTopics[t]).length;
 
   return (
     <section className="space-y-6">
-      <h2 className="text-3xl font-bold text-white">Learning Roadmap</h2>
-      <p className="text-slate-300">Mark each topic as complete to update your personal dashboard progress.</p>
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+        <p className="text-sm uppercase tracking-widest text-cyan-300">Roadmap</p>
+        <h2 className="mt-2 text-3xl font-bold text-white">Learning Roadmap</h2>
+        <p className="mt-2 text-slate-400">Mark each topic complete to track your progress. {completed}/{topics.length} done.</p>
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-800">
+          <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500 transition-all duration-500" style={{ width: `${(completed / topics.length) * 100}%` }} />
+        </div>
+      </div>
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {topics.map((topic) => (
-          <article key={topic} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+          <article key={topic} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 transition hover:border-slate-700">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold text-cyan-200">{topic}</h3>
-                <p className="mt-2 text-slate-300">Theory, visuals, complexity analysis, examples, and practice problems included.</p>
+                <h3 className="text-lg font-semibold text-cyan-200">{topic}</h3>
+                <p className="mt-2 text-sm text-slate-400">Theory, visuals, complexity analysis, examples, and practice problems included.</p>
               </div>
-              <label className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100">
-                <input type="checkbox" checked={Boolean(completedTopics[topic])} onChange={() => toggleTopic(topic)} />
-                {completedTopics[topic] ? 'Completed' : 'Not done'}
+              <label className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 transition hover:border-slate-600">
+                <input
+                  type="checkbox"
+                  checked={Boolean(completedTopics[topic])}
+                  onChange={() => toggleTopic(topic)}
+                  className="accent-cyan-400"
+                />
+                {completedTopics[topic] ? '✓ Done' : 'Mark done'}
               </label>
             </div>
           </article>
@@ -169,59 +74,298 @@ function LearningPage() {
   );
 }
 
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/auth" replace />;
+}
 
-function DashboardPage() {
-  const [completedTopics, setCompletedTopics] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('topicProgress') || '{}');
-    } catch {
-      return {};
-    }
-  });
+// Dropdown for visualizers
+const visualizerLinks = [
+  { to: '/sorting', label: 'Sorting' },
+  { to: '/searching', label: 'Searching' },
+  { to: '/linked-list', label: 'Linked List' },
+  { to: '/stack', label: 'Stack' },
+  { to: '/queue', label: 'Queue' },
+  { to: '/trees', label: 'Trees' },
+  { to: '/graphs', label: 'Graphs' },
+  { to: '/modules', label: 'Modules' },
+];
+
+function VisualizerDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const location = useLocation();
+  const isActive = visualizerLinks.some((l) => location.pathname.startsWith(l.to));
 
   useEffect(() => {
-    const updateProgress = () => {
-      try {
-        setCompletedTopics(JSON.parse(localStorage.getItem('topicProgress') || '{}'));
-      } catch {
-        setCompletedTopics({});
-      }
-    };
-
-    updateProgress();
-    window.addEventListener('storage', updateProgress);
-    return () => window.removeEventListener('storage', updateProgress);
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const topicList = ['Arrays', 'Linked Lists', 'Stack', 'Queue', 'Trees', 'Graphs', 'Hashing', 'Recursion', 'Dynamic Programming'];
-  const topicsCompleted = topicList.filter((topic) => completedTopics[topic]).length;
-  const progressPercentage = Math.round((topicsCompleted / topicList.length) * 100);
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-
   return (
-    <section className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-white">User Dashboard</h2>
-        <p className="mt-2 text-slate-300">Welcome back, {user.name || 'Student'}.</p>
-      </div>
-      <section className="grid gap-6 lg:grid-cols-2">
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">Total Progress: {progressPercentage}%</article>
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">Topics Completed: {topicsCompleted}</article>
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">Algorithms Learned: {topicsCompleted + 3}</article>
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">Current Streak: {Math.max(1, topicsCompleted)} days</article>
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">Recently Visited Topics: {topicList.filter((topic) => completedTopics[topic]).slice(0, 3).join(', ') || 'None yet'}</article>
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">Recent Activity: {topicsCompleted > 0 ? 'Completed topics updated in your learning roadmap.' : 'Start marking topics complete to update your progress.'}</article>
-      </section>
-    </section>
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-sm transition ${isActive ? 'bg-cyan-400/10 text-cyan-200' : 'text-slate-300 hover:text-white'}`}
+      >
+        <Layers size={15} /> Visualizers <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl shadow-black/40"
+          >
+            {visualizerLinks.map(({ to, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  `block px-4 py-2.5 text-sm transition ${isActive ? 'bg-cyan-400/10 text-cyan-200' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
-function AdminPage() {
+function UserMenu() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/';
+  };
+
+  if (!token) {
+    return (
+      <Link to="/auth" className="rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-cyan-500/40 hover:text-white">
+        Sign in
+      </Link>
+    );
+  }
+
   return (
-    <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 text-slate-200">
-      <h2 className="text-3xl font-bold text-white">Admin Dashboard</h2>
-      <p className="mt-3">Add topics, edit content, manage problems, and oversee users from this control panel.</p>
-    </section>
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 transition hover:border-slate-600"
+      >
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 text-xs font-bold text-slate-950">
+          {user.name?.[0]?.toUpperCase() || 'U'}
+        </div>
+        <span className="hidden max-w-[100px] truncate sm:block">{user.name || 'User'}</span>
+        <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl shadow-black/40"
+          >
+            <div className="border-b border-slate-800 px-4 py-3">
+              <p className="text-sm font-semibold text-white">{user.name}</p>
+              <p className="truncate text-xs text-slate-500">{user.email}</p>
+            </div>
+            <NavLink to="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white">
+              <BarChart3 size={14} /> Dashboard
+            </NavLink>
+            {user.role === 'admin' && (
+              <NavLink to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white">
+                <Shield size={14} /> Admin Panel
+              </NavLink>
+            )}
+            <button onClick={logout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-rose-400 hover:bg-rose-500/10">
+              <LogOut size={14} /> Sign out
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function App() {
+  const [dark, setDark] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (dark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [dark]);
+
+  // Close mobile menu on navigation
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
+  const primaryNav = [
+    { to: '/', label: 'Home', icon: Home, exact: true },
+    { to: '/learning', label: 'Learning', icon: BookOpen },
+    { to: '/problems', label: 'Problems', icon: Code2 },
+    { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+  ];
+
+  return (
+    <div className={dark ? 'dark' : ''}>
+      <div className="min-h-screen bg-slate-950 text-slate-100">
+        {/* Header */}
+        <header className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-xl">
+          <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 text-xl font-black tracking-wide">
+              <span className="bg-gradient-to-r from-cyan-300 to-violet-400 bg-clip-text text-transparent">VisualDSA</span>
+            </Link>
+
+            {/* Desktop nav */}
+            <div className="hidden items-center gap-1 lg:flex">
+              {primaryNav.map(({ to, label, icon: Icon, exact }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={exact}
+                  className={({ isActive }) =>
+                    `flex items-center gap-1.5 rounded-full px-3 py-2 text-sm transition ${
+                      isActive ? 'bg-cyan-400/10 text-cyan-200' : 'text-slate-300 hover:text-white'
+                    }`
+                  }
+                >
+                  <Icon size={15} /> {label}
+                </NavLink>
+              ))}
+              <VisualizerDropdown />
+            </div>
+
+            {/* Right controls */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setDark(!dark)}
+                className="rounded-full border border-slate-700 bg-slate-900 p-2 text-slate-300 transition hover:text-white"
+                aria-label="Toggle dark mode"
+              >
+                {dark ? <Sun size={15} /> : <Moon size={15} />}
+              </button>
+              <UserMenu />
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="rounded-full border border-slate-700 bg-slate-900 p-2 text-slate-300 transition hover:text-white lg:hidden"
+                aria-label="Toggle menu"
+              >
+                {menuOpen ? <X size={15} /> : <Menu size={15} />}
+              </button>
+            </div>
+          </nav>
+
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden border-t border-slate-800 bg-slate-950 lg:hidden"
+              >
+                <div className="space-y-1 p-4">
+                  {primaryNav.map(({ to, label, icon: Icon }) => (
+                    <NavLink
+                      key={to}
+                      to={to}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm ${
+                          isActive ? 'bg-cyan-400/10 text-cyan-200' : 'text-slate-300'
+                        }`
+                      }
+                    >
+                      <Icon size={16} /> {label}
+                    </NavLink>
+                  ))}
+                  <div className="my-2 border-t border-slate-800 pt-2">
+                    <p className="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Visualizers</p>
+                    {visualizerLinks.map(({ to, label }) => (
+                      <NavLink
+                        key={to}
+                        to={to}
+                        className={({ isActive }) =>
+                          `flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm ${
+                            isActive ? 'bg-cyan-400/10 text-cyan-200' : 'text-slate-300'
+                          }`
+                        }
+                      >
+                        <Boxes size={15} /> {label}
+                      </NavLink>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </header>
+
+        {/* Main */}
+        <main className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<PageWrapper><HomePage /></PageWrapper>} />
+              <Route path="/learning" element={<PageWrapper><LearningPage /></PageWrapper>} />
+              <Route path="/practice" element={<Navigate to="/problems" replace />} />
+              <Route path="/problems" element={<PageWrapper><ProblemsPage /></PageWrapper>} />
+              <Route path="/problems/:slug" element={<ProblemDetailPage />} />
+              <Route path="/sorting" element={<PageWrapper><SortingPage /></PageWrapper>} />
+              <Route path="/visualizers/sorting/:algorithm" element={<SortingVisualizerPage />} />
+              <Route path="/searching" element={<PageWrapper><SearchingPage /></PageWrapper>} />
+              <Route path="/linked-list" element={<PageWrapper><LinkedListVisualizer /></PageWrapper>} />
+              <Route path="/stack" element={<PageWrapper><StackVisualizer /></PageWrapper>} />
+              <Route path="/queue" element={<PageWrapper><QueueVisualizer /></PageWrapper>} />
+              <Route path="/trees" element={<PageWrapper><TreeVisualizer /></PageWrapper>} />
+              <Route path="/graphs" element={<PageWrapper><GraphVisualizer /></PageWrapper>} />
+              <Route path="/modules" element={<PageWrapper><ModulesPage /></PageWrapper>} />
+              <Route path="/dashboard" element={<ProtectedRoute><PageWrapper><DashboardPage /></PageWrapper></ProtectedRoute>} />
+              <Route path="/auth" element={<PageWrapper><AuthPage /></PageWrapper>} />
+              <Route path="/admin" element={<PageWrapper><AdminPage /></PageWrapper>} />
+              <Route path="*" element={<PageWrapper><NotFoundPage /></PageWrapper>} />
+            </Routes>
+          </AnimatePresence>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function PageWrapper({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
   );
 }
 

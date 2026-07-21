@@ -7,7 +7,7 @@ export const getRedis = async () => {
   if (unavailable) return null;
   if (client?.isOpen) return client;
 
-  const url = process.env.REDIS_URL;
+  const url = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
   if (!url) return null;
 
   try {

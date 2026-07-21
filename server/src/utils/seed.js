@@ -68,7 +68,7 @@ const problems = [
       { input: 's = "()[]{}"', output: 'true', explanation: '' },
       { input: 's = "(]"', output: 'false', explanation: '' },
     ],
-    constraints: ['1 <= s.length <= 10^4', 's consists of parentheses only \'()[]{}.\''],
+    constraints: ['1 <= s.length <= 10^4', "s consists of parentheses only '()[]{}'."],
     functionName: 'isValid',
     starterCode: {
       JavaScript: 'function isValid(s) {\n  // Write your code here\n}\n',
@@ -134,12 +134,12 @@ const problems = [
     slug: 'number-of-islands',
     difficulty: 'Medium',
     tags: ['Array', 'DFS', 'Graph'],
-    description: 'Given an `m x n` 2D binary grid `grid` which represents a map of `\'1\'s` (land) and `\'0\'s` (water), return the number of islands.\n\nAn island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.',
+    description: "Given an `m x n` 2D binary grid `grid` which represents a map of `'1'`s (land) and `'0'`s (water), return the number of islands.\n\nAn island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.",
     examples: [
       { input: 'grid = [["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]', output: '1', explanation: '' },
       { input: 'grid = [["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]', output: '3', explanation: '' },
     ],
-    constraints: ['m == grid.length', 'n == grid[i].length', '1 <= m, n <= 300', 'grid[i][j] is \'0\' or \'1\'.'],
+    constraints: ['m == grid.length', 'n == grid[i].length', '1 <= m, n <= 300', "grid[i][j] is '0' or '1'."],
     functionName: 'numIslands',
     starterCode: {
       JavaScript: 'function numIslands(grid) {\n  // Write your code here\n}\n',
@@ -152,11 +152,158 @@ const problems = [
     ],
     languages: ['JavaScript', 'Java', 'C++'],
   },
+  {
+    title: 'Fibonacci Number',
+    slug: 'fibonacci-number',
+    difficulty: 'Easy',
+    tags: ['Math', 'Dynamic Programming', 'Recursion'],
+    description: 'The Fibonacci numbers, commonly denoted `F(n)` form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1.\n\nThat is:\n- `F(0) = 0`, `F(1) = 1`\n- `F(n) = F(n - 1) + F(n - 2)`, for `n > 1`\n\nGiven `n`, calculate `F(n)`.',
+    examples: [
+      { input: 'n = 2', output: '1', explanation: 'F(2) = F(1) + F(0) = 1 + 0 = 1.' },
+      { input: 'n = 3', output: '2', explanation: 'F(3) = F(2) + F(1) = 1 + 1 = 2.' },
+      { input: 'n = 4', output: '3', explanation: 'F(4) = F(3) + F(2) = 2 + 1 = 3.' },
+    ],
+    constraints: ['0 <= n <= 30'],
+    functionName: 'fib',
+    starterCode: {
+      JavaScript: 'function fib(n) {\n  // Write your code here\n}\n',
+      Java: 'class Solution {\n    public int fib(int n) {\n        // Write your code here\n    }\n}\n',
+      'C++': 'class Solution {\npublic:\n    int fib(int n) {\n        // Write your code here\n    }\n};\n',
+    },
+    testCases: [
+      { input: { n: 2 }, expected: 1 },
+      { input: { n: 3 }, expected: 2 },
+      { input: { n: 4 }, expected: 3 },
+      { input: { n: 10 }, expected: 55 },
+    ],
+    languages: ['JavaScript', 'Java', 'C++'],
+  },
+  {
+    title: 'Valid Palindrome',
+    slug: 'valid-palindrome',
+    difficulty: 'Easy',
+    tags: ['String', 'Two Pointers'],
+    description: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.\n\nGiven a string `s`, return `true` if it is a palindrome, or `false` otherwise.',
+    examples: [
+      { input: 's = "A man, a plan, a canal: Panama"', output: 'true', explanation: '"amanaplanacanalpanama" is a palindrome.' },
+      { input: 's = "race a car"', output: 'false', explanation: '"raceacar" is not a palindrome.' },
+      { input: 's = " "', output: 'true', explanation: 's is an empty string after removing non-alphanumeric characters. An empty string reads the same forward and backward.' },
+    ],
+    constraints: ['1 <= s.length <= 2 * 10^5', 's consists only of printable ASCII characters.'],
+    functionName: 'isPalindrome',
+    starterCode: {
+      JavaScript: 'function isPalindrome(s) {\n  // Write your code here\n}\n',
+      Java: 'class Solution {\n    public boolean isPalindrome(String s) {\n        // Write your code here\n    }\n}\n',
+      'C++': 'class Solution {\npublic:\n    bool isPalindrome(string s) {\n        // Write your code here\n    }\n};\n',
+    },
+    testCases: [
+      { input: { s: 'A man, a plan, a canal: Panama' }, expected: true },
+      { input: { s: 'race a car' }, expected: false },
+      { input: { s: ' ' }, expected: true },
+    ],
+    languages: ['JavaScript', 'Java', 'C++'],
+  },
+  {
+    title: 'Climbing Stairs',
+    slug: 'climbing-stairs',
+    difficulty: 'Easy',
+    tags: ['Math', 'Dynamic Programming', 'Memoization'],
+    description: 'You are climbing a staircase. It takes `n` steps to reach the top.\n\nEach time you can either climb `1` or `2` steps. In how many distinct ways can you climb to the top?',
+    examples: [
+      { input: 'n = 2', output: '2', explanation: 'There are two ways to climb to the top.\n1. 1 step + 1 step\n2. 2 steps' },
+      { input: 'n = 3', output: '3', explanation: 'There are three ways to climb to the top.\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step' },
+    ],
+    constraints: ['1 <= n <= 45'],
+    functionName: 'climbStairs',
+    starterCode: {
+      JavaScript: 'function climbStairs(n) {\n  // Write your code here\n}\n',
+      Java: 'class Solution {\n    public int climbStairs(int n) {\n        // Write your code here\n    }\n}\n',
+      'C++': 'class Solution {\npublic:\n    int climbStairs(int n) {\n        // Write your code here\n    }\n};\n',
+    },
+    testCases: [
+      { input: { n: 2 }, expected: 2 },
+      { input: { n: 3 }, expected: 3 },
+      { input: { n: 5 }, expected: 8 },
+    ],
+    languages: ['JavaScript', 'Java', 'C++'],
+  },
+  {
+    title: 'Single Number',
+    slug: 'single-number',
+    difficulty: 'Easy',
+    tags: ['Array', 'Bit Manipulation'],
+    description: 'Given a non-empty array of integers `nums`, every element appears twice except for one. Find that single one.\n\nYou must implement a solution with a linear runtime complexity and use only constant extra space.',
+    examples: [
+      { input: 'nums = [2,2,1]', output: '1', explanation: '' },
+      { input: 'nums = [4,1,2,1,2]', output: '4', explanation: '' },
+      { input: 'nums = [1]', output: '1', explanation: '' },
+    ],
+    constraints: ['1 <= nums.length <= 3 * 10^4', '-3 * 10^4 <= nums[i] <= 3 * 10^4', 'Each element in the array appears twice except for one element which appears only once.'],
+    functionName: 'singleNumber',
+    starterCode: {
+      JavaScript: 'function singleNumber(nums) {\n  // Write your code here\n}\n',
+      Java: 'class Solution {\n    public int singleNumber(int[] nums) {\n        // Write your code here\n    }\n}\n',
+      'C++': 'class Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        // Write your code here\n    }\n};\n',
+    },
+    testCases: [
+      { input: { nums: [2, 2, 1] }, expected: 1 },
+      { input: { nums: [4, 1, 2, 1, 2] }, expected: 4 },
+      { input: { nums: [1] }, expected: 1 },
+    ],
+    languages: ['JavaScript', 'Java', 'C++'],
+  },
+  {
+    title: 'Reverse String',
+    slug: 'reverse-string',
+    difficulty: 'Easy',
+    tags: ['Array', 'Two Pointers', 'String'],
+    description: 'Write a function that reverses a string. The input string is given as an array of characters `s`.\n\nYou must do this by modifying the input array in-place with `O(1)` extra memory.',
+    examples: [
+      { input: 's = ["h","e","l","l","o"]', output: '["o","l","l","e","h"]', explanation: '' },
+      { input: 's = ["H","a","n","n","a","h"]', output: '["h","a","n","n","a","H"]', explanation: '' },
+    ],
+    constraints: ['1 <= s.length <= 10^5', 's[i] is a printable ascii character.'],
+    functionName: 'reverseString',
+    starterCode: {
+      JavaScript: 'function reverseString(s) {\n  // Modify s in-place and return it\n  return s;\n}\n',
+      Java: 'class Solution {\n    public void reverseString(char[] s) {\n        // Write your code here\n    }\n}\n',
+      'C++': 'class Solution {\npublic:\n    void reverseString(vector<char>& s) {\n        // Write your code here\n    }\n};\n',
+    },
+    testCases: [
+      { input: { s: ['h', 'e', 'l', 'l', 'o'] }, expected: ['o', 'l', 'l', 'e', 'h'] },
+      { input: { s: ['H', 'a', 'n', 'n', 'a', 'h'] }, expected: ['h', 'a', 'n', 'n', 'a', 'H'] },
+    ],
+    languages: ['JavaScript', 'Java', 'C++'],
+  },
+  {
+    title: 'Longest Common Prefix',
+    slug: 'longest-common-prefix',
+    difficulty: 'Easy',
+    tags: ['String', 'Trie'],
+    description: 'Write a function to find the longest common prefix string amongst an array of strings.\n\nIf there is no common prefix, return an empty string `""`.',
+    examples: [
+      { input: 'strs = ["flower","flow","flight"]', output: '"fl"', explanation: '' },
+      { input: 'strs = ["dog","racecar","car"]', output: '""', explanation: 'There is no common prefix among the input strings.' },
+    ],
+    constraints: ['1 <= strs.length <= 200', '0 <= strs[i].length <= 200', 'strs[i] consists of only lowercase English letters.'],
+    functionName: 'longestCommonPrefix',
+    starterCode: {
+      JavaScript: 'function longestCommonPrefix(strs) {\n  // Write your code here\n}\n',
+      Java: 'class Solution {\n    public String longestCommonPrefix(String[] strs) {\n        // Write your code here\n    }\n}\n',
+      'C++': 'class Solution {\npublic:\n    string longestCommonPrefix(vector<string>& strs) {\n        // Write your code here\n    }\n};\n',
+    },
+    testCases: [
+      { input: { strs: ['flower', 'flow', 'flight'] }, expected: 'fl' },
+      { input: { strs: ['dog', 'racecar', 'car'] }, expected: '' },
+      { input: { strs: ['interview', 'inter', 'internal'] }, expected: 'inter' },
+    ],
+    languages: ['JavaScript', 'Java', 'C++'],
+  },
 ];
 
 export const seedProblems = async () => {
   const existing = await Problem.find();
-  const needsSeed = existing.length === 0 || existing.some((item) => !item.slug);
+  const needsSeed = existing.length === 0 || existing.length < problems.length || existing.some((item) => !item.slug);
 
   if (needsSeed) {
     await Problem.deleteMany({});
