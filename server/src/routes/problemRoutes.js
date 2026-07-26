@@ -12,7 +12,7 @@ router.post('/', protect, createProblem);
 router.post('/:slug/run', runProblem);
 router.post('/:slug/submit', protect, submitSolution);
 router.get('/:slug/submissions', protect, getSubmissions);
-router.post('/:slug/hint', protect, getHint);
+router.post('/:slug/hint', getHint);
 router.post('/:slug/analyze', getAnalysis);   // no auth — open to all
 
 export default router;

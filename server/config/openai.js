@@ -3,9 +3,12 @@ import OpenAI from 'openai';
 let openai = null;
 
 export const getOpenAI = () => {
-  if (!process.env.OPENAI_API_KEY) return null;
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const looksLikePlaceholder = !apiKey || apiKey.includes('your_openai') || apiKey.includes('your_ope') || apiKey.includes('example');
+
+  if (looksLikePlaceholder) return null;
   if (!openai) {
-    openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    openai = new OpenAI({ apiKey });
   }
   return openai;
 };
@@ -18,6 +21,7 @@ export const generateHint = async ({ title, description, code, difficulty }) => 
     return {
       hint: `Think about the constraints for "${title}" (${difficulty}). Break the problem into smaller steps: parse input, apply the core algorithm, and return the expected format.`,
       source: 'fallback',
+      note: 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable AI-generated hints.',
     };
   }
 
@@ -79,6 +83,7 @@ export const analyzeComplexity = async ({ title, description, code, language, di
   // ── Fallback when no API key is configured ──────────────────────────────────
   if (!client) {
     const base = COMPLEXITY_FALLBACKS[functionName] || COMPLEXITY_FALLBACKS.default;
+    const missingKeyMessage = 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable AI-powered analysis.';
 
     // Try to guess complexity from the user's code with simple heuristics
     let timeComplexity = base.timeComplexity;
@@ -99,7 +104,7 @@ export const analyzeComplexity = async ({ title, description, code, language, di
       else if (usesRecursion) spaceComplexity = 'O(n) call stack';
     }
 
-    return { ...base, timeComplexity, spaceComplexity };
+    return { ...base, timeComplexity, spaceComplexity, note: missingKeyMessage };
   }
 
   // ── OpenAI analysis ─────────────────────────────────────────────────────────
@@ -150,6 +155,6 @@ Analyze the time and space complexity of the code above. If the code is empty or
   } catch (err) {
     // JSON parse failure or API error — return structured fallback
     const base = COMPLEXITY_FALLBACKS.default;
-    return { ...base, explanation: `Analysis unavailable: ${err.message}`, source: 'error' };
+    return { ...base, explanation: `Analysis unavailable: ${err.message}`, source: 'error', note: 'OpenAI request failed. Check the server logs and API key configuration.' };
   }
 };

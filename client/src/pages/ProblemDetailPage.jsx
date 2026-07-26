@@ -316,12 +316,13 @@ export default function ProblemDetailPage() {
   };
 
   const fetchHint = async () => {
-    if (!token) { toast.error('Log in to use AI hints.'); return; }
     setHintLoading(true); setHint(''); setActiveTab('hint');
     try {
       const data = await apiFetch(`/problems/${slug}/hint`, { method: 'POST', body: JSON.stringify({ code }) });
-      setHint(data.hint); setHintSource(data.source);
-      toast.info('Hint ready!');
+      setHint(data.hint || data.message || 'No hint available.');
+      setHintSource(data.source || 'fallback');
+      if (data.note) toast.info(data.note);
+      else toast.info('Hint ready!');
     } catch (e) { toast.error(e.message); }
     finally { setHintLoading(false); }
   };
@@ -330,8 +331,10 @@ export default function ProblemDetailPage() {
     setAnalysisLoading(true); setAnalysisError(''); setAnalysis(null); setActiveTab('analysis');
     try {
       const data = await apiFetch(`/problems/${slug}/analyze`, { method: 'POST', body: JSON.stringify({ code, language }) });
-      setAnalysis(data); toast.success('Analysis complete!');
-    } catch (e) { setAnalysisError(e.message); toast.error('Analysis failed.'); }
+      setAnalysis(data);
+      if (data.note) toast.info(data.note);
+      else toast.success('Analysis complete!');
+    } catch (e) { setAnalysisError(e.message); toast.error(e.message || 'Analysis failed.'); }
     finally { setAnalysisLoading(false); }
   };
 
