@@ -1,6 +1,7 @@
 import Submission from '../models/Submission.js';
 import Problem from '../models/Problem.js';
 import { evaluateSubmission } from '../utils/judge.js';
+import { awardForSolve } from './statsController.js';
 
 export const submitSolution = async (req, res) => {
   try {
@@ -19,6 +20,11 @@ export const submitSolution = async (req, res) => {
       code,
       status: evaluation.status,
     });
+
+    // Award XP for first accepted solve (fire-and-forget, no await)
+    if (evaluation.status === 'Accepted') {
+      awardForSolve(req.user.id, req.params.slug).catch(() => {});
+    }
 
     res.status(201).json({ submission, ...evaluation });
   } catch (error) {

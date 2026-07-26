@@ -14,6 +14,8 @@ import topicRoutes from './routes/topicRoutes.js';
 import problemRoutes from './routes/problemRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
+import discussionRoutes from './routes/discussionRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,8 +40,10 @@ app.get('/api/health', (_req, res) => res.json({
 app.use('/api/auth', authRoutes);
 app.use('/api/topics', topicRoutes);
 app.use('/api/problems', problemRoutes);
+app.use('/api/problems/:slug/discussions', discussionRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);
