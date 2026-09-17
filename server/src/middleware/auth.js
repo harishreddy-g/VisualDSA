@@ -11,3 +11,15 @@ export const protect = (req, res, next) => {
     res.status(401).json({ message: 'Invalid token' });
   }
 };
+
+export const requireAdmin = (req, res, next) => {
+  if (req.user?.role !== 'admin') return res.status(403).json({ message: 'Admin access required' });
+  next();
+};
+
+export const protectSelfOrAdmin = (req, res, next) => {
+  if (req.user?.role !== 'admin' && req.user?.id !== req.params.userId) {
+    return res.status(403).json({ message: 'You can only access your own progress' });
+  }
+  next();
+};

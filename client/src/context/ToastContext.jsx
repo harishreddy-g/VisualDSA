@@ -49,7 +49,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={toast}>
       {children}
-      {/* Toast renderer — fixed bottom-right */}
+      {/* Toast renderer - fixed bottom-right */}
       <div className="pointer-events-none fixed bottom-6 right-6 z-[100] flex flex-col gap-3" aria-live="polite">
         <AnimatePresence>
           {toasts.map((t) => {
@@ -61,7 +61,7 @@ export function ToastProvider({ children }) {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: 60, scale: 0.9 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                className={`pointer-events-auto flex min-w-[280px] max-w-[360px] items-start gap-3 rounded-2xl border px-4 py-3.5 shadow-2xl shadow-black/40 backdrop-blur-xl ${STYLES[t.type]}`}
+                className={`pointer-events-auto flex min-w-[280px] max-w-[360px] items-start gap-3 rounded-lg border px-4 py-3.5 shadow-2xl shadow-black/40 backdrop-blur-xl ${STYLES[t.type]}`}
               >
                 <Icon size={17} className={`mt-0.5 shrink-0 ${ICON_COLORS[t.type]}`} />
                 <p className="flex-1 text-sm leading-relaxed">{t.message}</p>

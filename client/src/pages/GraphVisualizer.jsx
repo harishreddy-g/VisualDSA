@@ -63,7 +63,7 @@ export default function GraphVisualizer() {
     }
 
     setEdges((prev) => [...prev, { from, to, weight }]);
-    setMessage(`Added edge ${from} → ${to}${Number.isFinite(weight) ? ` (w=${weight})` : ''}.`);
+    setMessage(`Added edge ${from} -> ${to}${Number.isFinite(weight) ? ` (w=${weight})` : ''}.`);
   };
 
   const buildAdjacency = () => {
@@ -82,7 +82,7 @@ export default function GraphVisualizer() {
 
     const step = () => {
       if (index >= result.length) {
-        setMessage(`${label} visited: ${result.join(' → ')}.`);
+        setMessage(`${label} visited: ${result.join(' -> ')}.`);
         return;
       }
 
@@ -115,7 +115,7 @@ export default function GraphVisualizer() {
 
     const step = generateGraphSteps('BFS', nodes, edges)[0];
     animateTraversal(result, 'BFS');
-    setMessage(`BFS visited: ${result.join(' → ')}. ${step.message}`);
+    setMessage(`BFS visited: ${result.join(' -> ')}. ${step.message}`);
   };
 
   const dfs = () => {
@@ -138,7 +138,7 @@ export default function GraphVisualizer() {
 
     const step = generateGraphSteps('DFS', nodes, edges)[0];
     animateTraversal(result, 'DFS');
-    setMessage(`DFS visited: ${result.join(' → ')}. ${step.message}`);
+    setMessage(`DFS visited: ${result.join(' -> ')}. ${step.message}`);
   };
 
   const graphSummary = useMemo(() => `${nodes.length} node(s), ${edges.length} edge(s)`, [nodes, edges]);
@@ -147,30 +147,30 @@ export default function GraphVisualizer() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+      <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
         <h2 className="text-3xl font-bold text-white">Graph Visualizer</h2>
         <p className="mt-2 text-slate-300">Create nodes and edges, then animate BFS and DFS over the current graph.</p>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+        <article className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
           <div className="mb-4 flex flex-wrap gap-3">
-            <input value={nodeInput} onChange={(e) => setNodeInput(e.target.value)} placeholder="Node label" className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
-            <button onClick={addNode} className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">Add Node</button>
-            <input value={edgeInput} onChange={(e) => setEdgeInput(e.target.value)} placeholder="A-C" className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
-            <input value={weightInput} onChange={(e) => setWeightInput(e.target.value)} placeholder="Weight" className="w-24 rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
-            <button onClick={addEdge} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Add Edge</button>
+            <input value={nodeInput} onChange={(e) => setNodeInput(e.target.value)} placeholder="Node label" className="rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
+            <button onClick={addNode} className="rounded-lg bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">Add Node</button>
+            <input value={edgeInput} onChange={(e) => setEdgeInput(e.target.value)} placeholder="A-C" className="rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
+            <input value={weightInput} onChange={(e) => setWeightInput(e.target.value)} placeholder="Weight" className="w-24 rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
+            <button onClick={addEdge} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Add Edge</button>
           </div>
           <div className="mb-4 flex gap-2">
             {['Undirected', 'Directed'].map((mode) => (
-              <button key={mode} onClick={() => setGraphMode(mode)} className={`rounded-full px-3 py-2 text-xs font-semibold ${graphMode === mode ? 'bg-cyan-400 text-slate-950' : 'border border-slate-700 text-slate-100'}`}>{mode}</button>
+              <button key={mode} onClick={() => setGraphMode(mode)} className={`rounded-lg px-3 py-2 text-xs font-semibold ${graphMode === mode ? 'bg-cyan-400 text-slate-950' : 'border border-slate-700 text-slate-100'}`}>{mode}</button>
             ))}
           </div>
           <div className="mb-4 flex gap-3">
-            <button onClick={bfs} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Run BFS</button>
-            <button onClick={dfs} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Run DFS</button>
+            <button onClick={bfs} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Run BFS</button>
+            <button onClick={dfs} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Run DFS</button>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-slate-200">{graphSummary}</div>
-          <div className="mt-4 overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/90 p-3">
+          <div className="rounded-lg border border-slate-800 bg-slate-950 p-4 text-sm text-slate-200">{graphSummary}</div>
+          <div className="mt-4 overflow-hidden rounded-lg border border-slate-800 bg-slate-950/90 p-3">
             <svg viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`} className="h-[420px] w-full">
               <defs>
                 <marker id="graphArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
@@ -205,20 +205,20 @@ export default function GraphVisualizer() {
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             {nodes.map((node) => (
-              <span key={node} className={`rounded-full border px-3 py-2 text-sm ${visited.includes(node) ? 'border-emerald-400 bg-emerald-400/20 text-emerald-100' : currentNode === node ? 'border-cyan-400 bg-cyan-400/20 text-cyan-100' : 'border-cyan-400/30 bg-cyan-400/10 text-slate-100'}`}>{node}</span>
+              <span key={node} className={`rounded-lg border px-3 py-2 text-sm ${visited.includes(node) ? 'border-emerald-400 bg-emerald-400/20 text-emerald-100' : currentNode === node ? 'border-cyan-400 bg-cyan-400/20 text-cyan-100' : 'border-cyan-400/30 bg-cyan-400/10 text-slate-100'}`}>{node}</span>
             ))}
           </div>
-          <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">{edges.map((edge) => <span key={`${edge.from}-${edge.to}`} className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1">{edge.from} — {edge.to} {edge.weight ? `(w=${edge.weight})` : ''}</span>)}</div>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">{edges.map((edge) => <span key={`${edge.from}-${edge.to}`} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1">{edge.from} - {edge.to} {edge.weight ? `(w=${edge.weight})` : ''}</span>)}</div>
           <p className="mt-4 text-sm text-cyan-100">{message}</p>
         </article>
 
-        <aside className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
+        <aside className="rounded-lg border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
           <h3 className="text-xl font-semibold text-white">Graph Notes</h3>
           <div className="mt-4 space-y-3 text-sm text-slate-300">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">BFS explores neighbors level by level.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">DFS explores a branch deeply before backtracking.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Visited nodes are highlighted in the graph summary.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">BFS explores neighbors level by level.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">DFS explores a branch deeply before backtracking.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Visited nodes are highlighted in the graph summary.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">
               <h4 className="text-sm font-semibold text-cyan-100">Pseudocode</h4>
               <pre className="mt-2 whitespace-pre-wrap text-xs text-slate-200">{Object.entries(graphInfo).map(([name, info]) => `// ${name}\n${info.pseudocode.join('\n')}`).join('\n\n')}</pre>
             </div>

@@ -10,7 +10,7 @@ export default function NotFoundPage() {
       className="flex min-h-[60vh] flex-col items-center justify-center space-y-6 text-center"
     >
       <div className="relative">
-        <div className="absolute inset-0 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute inset-0 rounded-lg bg-cyan-500/10 blur-3xl" />
         <p className="relative text-8xl font-black text-slate-800 select-none">404</p>
       </div>
       <div className="space-y-2">
@@ -22,13 +22,13 @@ export default function NotFoundPage() {
       <div className="flex flex-wrap justify-center gap-3">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 px-6 py-3 font-semibold text-slate-950"
+          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-400 to-cyan-500 px-6 py-3 font-semibold text-slate-950"
         >
           <Home size={16} /> Go Home
         </Link>
         <Link
           to="/problems"
-          className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-6 py-3 font-semibold text-slate-100 hover:bg-slate-800"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-6 py-3 font-semibold text-slate-100 hover:bg-slate-800"
         >
           <Code2 size={16} /> Browse Problems
         </Link>

@@ -1,7 +1,7 @@
 export const sortingInfo = {
-  'Bubble Sort': { complexity: 'O(n²)', space: 'O(1)', pseudocode: ['for i = 0 to n-1', '  for j = 0 to n-i-2', '    if a[j] > a[j+1]', '      swap(a[j], a[j+1])'] },
-  'Selection Sort': { complexity: 'O(n²)', space: 'O(1)', pseudocode: ['for i = 0 to n-1', '  minIndex = i', '  for j = i+1 to n-1', '    if a[j] < a[minIndex]', '      minIndex = j', '  swap(a[i], a[minIndex])'] },
-  'Insertion Sort': { complexity: 'O(n²)', space: 'O(1)', pseudocode: ['for i = 1 to n-1', '  key = a[i]', '  j = i - 1', '  while j >= 0 and a[j] > key', '    a[j+1] = a[j]', '    j--', '  a[j+1] = key'] },
+  'Bubble Sort': { complexity: 'O(n^2)', space: 'O(1)', pseudocode: ['for i = 0 to n-1', '  for j = 0 to n-i-2', '    if a[j] > a[j+1]', '      swap(a[j], a[j+1])'] },
+  'Selection Sort': { complexity: 'O(n^2)', space: 'O(1)', pseudocode: ['for i = 0 to n-1', '  minIndex = i', '  for j = i+1 to n-1', '    if a[j] < a[minIndex]', '      minIndex = j', '  swap(a[i], a[minIndex])'] },
+  'Insertion Sort': { complexity: 'O(n^2)', space: 'O(1)', pseudocode: ['for i = 1 to n-1', '  key = a[i]', '  j = i - 1', '  while j >= 0 and a[j] > key', '    a[j+1] = a[j]', '    j--', '  a[j+1] = key'] },
   'Merge Sort': { complexity: 'O(n log n)', space: 'O(n)', pseudocode: ['mergeSort(left, right)', '  if left < right', '    mid = (left + right) / 2', '    mergeSort(left, mid)', '    mergeSort(mid+1, right)', '    merge(left, mid, right)'] },
   'Quick Sort': { complexity: 'O(n log n)', space: 'O(log n)', pseudocode: ['pivot = a[right]', '  partition around pivot', '  quickSort(left, pivot-1)', '  quickSort(pivot+1, right)'] },
   'Heap Sort': { complexity: 'O(n log n)', space: 'O(1)', pseudocode: ['build max heap', '  for i = n-1 to 1', '    swap(a[0], a[i])', '    heapify(0, i)'] },

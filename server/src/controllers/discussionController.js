@@ -1,6 +1,5 @@
 import Discussion from '../models/Discussion.js';
 
-// ── GET /api/problems/:slug/discussions ────────────────────────────────────────
 export const getDiscussions = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -9,22 +8,21 @@ export const getDiscussions = async (req, res) => {
       .limit(50)
       .populate('userId', 'name');
 
-    // Attach replies for each top-level comment
-    const ids = discussions.map((d) => d._id);
+    const ids = discussions.map((discussion) => discussion._id);
     const replies = await Discussion.find({ parentId: { $in: ids } })
       .sort('createdAt')
       .populate('userId', 'name');
 
     const replyMap = {};
-    replies.forEach((r) => {
-      const key = r.parentId.toString();
+    replies.forEach((reply) => {
+      const key = reply.parentId.toString();
       if (!replyMap[key]) replyMap[key] = [];
-      replyMap[key].push(r);
+      replyMap[key].push(reply);
     });
 
-    const result = discussions.map((d) => ({
-      ...d.toObject(),
-      replies: replyMap[d._id.toString()] || [],
+    const result = discussions.map((discussion) => ({
+      ...discussion.toObject(),
+      replies: replyMap[discussion._id.toString()] || [],
     }));
 
     res.json(result);
@@ -33,7 +31,6 @@ export const getDiscussions = async (req, res) => {
   }
 };
 
-// ── POST /api/problems/:slug/discussions ───────────────────────────────────────
 export const postDiscussion = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -54,19 +51,19 @@ export const postDiscussion = async (req, res) => {
   }
 };
 
-// ── POST /api/discussions/:id/like ─────────────────────────────────────────────
 export const likeDiscussion = async (req, res) => {
   try {
     const discussion = await Discussion.findById(req.params.id);
     if (!discussion) return res.status(404).json({ message: 'Not found.' });
 
     const uid = req.user._id.toString();
-    const liked = discussion.likes.map((l) => l.toString()).includes(uid);
+    const liked = discussion.likes.map((like) => like.toString()).includes(uid);
     if (liked) {
-      discussion.likes = discussion.likes.filter((l) => l.toString() !== uid);
+      discussion.likes = discussion.likes.filter((like) => like.toString() !== uid);
     } else {
       discussion.likes.push(req.user._id);
     }
+
     await discussion.save();
     res.json({ likes: discussion.likes.length, liked: !liked });
   } catch (err) {
@@ -74,7 +71,6 @@ export const likeDiscussion = async (req, res) => {
   }
 };
 
-// ── DELETE /api/discussions/:id ────────────────────────────────────────────────
 export const deleteDiscussion = async (req, res) => {
   try {
     const discussion = await Discussion.findById(req.params.id);
@@ -82,8 +78,8 @@ export const deleteDiscussion = async (req, res) => {
     if (discussion.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Forbidden.' });
     }
+
     await discussion.deleteOne();
-    // Delete replies too
     await Discussion.deleteMany({ parentId: req.params.id });
     res.json({ message: 'Deleted.' });
   } catch (err) {

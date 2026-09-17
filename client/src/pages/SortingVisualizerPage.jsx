@@ -56,27 +56,27 @@ export default function SortingVisualizerPage() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+      <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
         <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">Sorting Visualizer</p>
         <h2 className="mt-2 text-3xl font-bold text-white">{algorithm}</h2>
         <p className="mt-2 text-slate-300">Real comparisons and swaps are animated from the actual algorithm logic.</p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+        <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
           <div className="mb-4 flex flex-wrap gap-3">
-            <button onClick={generateNewArray} className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">Generate New Array</button>
-            <button onClick={start} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Start</button>
-            <button onClick={pause} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Pause</button>
-            <button onClick={resume} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Resume</button>
-            <button onClick={reset} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Reset</button>
+            <button onClick={generateNewArray} className="rounded-lg bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">Generate New Array</button>
+            <button onClick={start} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Start</button>
+            <button onClick={pause} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Pause</button>
+            <button onClick={resume} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Resume</button>
+            <button onClick={reset} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Reset</button>
           </div>
           <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-slate-200">
             <label className="flex items-center gap-2">Speed <input type="range" min="40" max="380" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} /></label>
             <label className="flex items-center gap-2">Array Size <input type="range" min="5" max="18" value={size} onChange={(e) => { setSize(Number(e.target.value)); setValues(randomArray(Number(e.target.value))); }} /></label>
           </div>
 
-          <div className="flex min-h-[260px] items-end gap-2 rounded-2xl border border-slate-800 bg-slate-950 p-4">
+          <div className="flex min-h-[260px] items-end gap-2 rounded-lg border border-slate-800 bg-slate-950 p-4">
             {currentStep.array.map((value, index) => {
               const isActive = index === currentStep.left || index === currentStep.right;
               const isSorted = sortedSet.has(value) || currentStep.sorted.includes(index);
@@ -94,15 +94,15 @@ export default function SortingVisualizerPage() {
           <p className="mt-4 text-sm text-cyan-100">{currentStep.explanation}</p>
         </div>
 
-        <aside className="space-y-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
+        <aside className="space-y-4 rounded-lg border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
           <h3 className="text-xl font-semibold text-white">Algorithm Details</h3>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Time Complexity: {info.complexity}</div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Space Complexity: {info.space}</div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+          <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Time Complexity: {info.complexity}</div>
+          <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Space Complexity: {info.space}</div>
+          <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">
             <h4 className="text-sm uppercase tracking-[0.35em] text-cyan-300">Pseudocode</h4>
             <pre className="mt-2 whitespace-pre-wrap text-sm text-slate-200">{info.pseudocode.join('\n')}</pre>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 text-sm text-slate-300">Current Step: {stepIndex + 1}/{Math.max(steps.length, 1)}</div>
+          <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4 text-sm text-slate-300">Current Step: {stepIndex + 1}/{Math.max(steps.length, 1)}</div>
         </aside>
       </div>
     </section>

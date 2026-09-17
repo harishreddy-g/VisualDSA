@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 const LANG_MAP = {
   JavaScript: 'javascript',
   Java: 'java',
+  C: 'c',
   'C++': 'cpp',
   Python: 'python',
 };
@@ -14,7 +15,7 @@ function EditorLoader() {
     <div className="flex h-full min-h-[320px] items-center justify-center bg-[#0d1117]">
       <div className="flex flex-col items-center gap-3">
         <Loader2 size={24} className="animate-spin text-cyan-400" />
-        <p className="text-xs text-slate-500">Loading editor…</p>
+        <p className="text-xs text-slate-500">Loading editor...</p>
       </div>
     </div>
   );

@@ -130,35 +130,36 @@ export default function TreeVisualizer() {
     return inorder(tree);
   }, [mode, tree]);
 
-  const traversalLabel = useMemo(() => traversal.join(' → '), [traversal]);
+  const traversalLabel = useMemo(() => traversal.join(' -> '), [traversal]);
 
   const handleModeChange = (nextMode) => {
+    const nextTraversal = nextMode === 'Preorder' ? preorder(tree) : nextMode === 'Postorder' ? postorder(tree) : inorder(tree);
     setMode(nextMode);
-    setActiveValues(traversal);
+    setActiveValues(nextTraversal);
     setMessage(`${nextMode} traversal is highlighted on the tree.`);
   };
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+      <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
         <h2 className="text-3xl font-bold text-white">Tree Visualizer</h2>
         <p className="mt-2 text-slate-300">BST insertion, deletion, search, and traversals are shown with live node highlights.</p>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+        <article className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
           <div className="mb-4 flex flex-wrap gap-3">
-            <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Value" className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
-            <button onClick={insert} className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">BST Insert</button>
-            <button onClick={remove} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">BST Delete</button>
-            <button onClick={search} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">BST Search</button>
+            <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Value" className="rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
+            <button onClick={insert} className="rounded-lg bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">BST Insert</button>
+            <button onClick={remove} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">BST Delete</button>
+            <button onClick={search} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">BST Search</button>
           </div>
           <div className="mb-4 flex gap-2">
             {['Inorder', 'Preorder', 'Postorder'].map((item) => (
-              <button key={item} onClick={() => handleModeChange(item)} className={`rounded-full px-3 py-2 text-xs font-semibold ${mode === item ? 'bg-cyan-400 text-slate-950' : 'border border-slate-700 text-slate-100'}`}>{item}</button>
+              <button key={item} onClick={() => handleModeChange(item)} className={`rounded-lg px-3 py-2 text-xs font-semibold ${mode === item ? 'bg-cyan-400 text-slate-950' : 'border border-slate-700 text-slate-100'}`}>{item}</button>
             ))}
           </div>
-          <div className="mb-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-slate-200">{traversalLabel}</div>
-          <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/90 p-3">
+          <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950 p-4 text-sm text-slate-200">{traversalLabel}</div>
+          <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-950/90 p-3">
             <svg viewBox={`0 0 ${TREE_WIDTH} ${TREE_HEIGHT}`} className="h-[420px] w-full">
               <defs>
                 <marker id="treeArrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
@@ -179,13 +180,13 @@ export default function TreeVisualizer() {
           <p className="mt-4 text-sm text-cyan-100">{message}</p>
         </article>
 
-        <aside className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
+        <aside className="rounded-lg border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
           <h3 className="text-xl font-semibold text-white">BST Overview</h3>
           <div className="mt-4 space-y-3 text-sm text-slate-300">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Left child is smaller than the parent.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Right child is greater than the parent.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Traversal output updates based on the current selected order and highlights the active path.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Left child is smaller than the parent.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Right child is greater than the parent.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Traversal output updates based on the current selected order and highlights the active path.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">
               <h4 className="text-sm font-semibold text-cyan-100">Pseudocode</h4>
               <pre className="mt-2 whitespace-pre-wrap text-xs text-slate-200">{Object.entries(treeInfo).map(([name, info]) => `// ${name}\n${info.pseudocode.join('\n')}`).join('\n\n')}</pre>
             </div>

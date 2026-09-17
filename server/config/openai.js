@@ -13,8 +13,6 @@ export const getOpenAI = () => {
   return openai;
 };
 
-// ─── Hint generation ───────────────────────────────────────────────────────────
-
 export const generateHint = async ({ title, description, code, difficulty }) => {
   const client = getOpenAI();
   if (!client) {
@@ -47,14 +45,44 @@ export const generateHint = async ({ title, description, code, difficulty }) => 
   };
 };
 
-// ─── Code complexity analysis ───────────────────────────────────────────────────
+export const chatWithTutor = async ({ messages = '', context = '' }) => {
+  const client = getOpenAI();
+  const fallback = 'I can help you learn DSA. Ask me about a pattern, share your approach, or describe the bug you are stuck on. I will guide you with hints before giving away a full solution.';
+
+  if (!client) {
+    return {
+      reply: fallback,
+      source: 'fallback',
+      note: 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable live tutoring.',
+    };
+  }
+
+  const response = await client.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: 'You are VisualDSA, a patient DSA tutor. Help users understand algorithms through concise explanations, questions, examples, and debugging guidance. Prefer hints and mental models over immediately giving complete solutions. Use Markdown when helpful. Keep responses under 180 words.',
+      },
+      ...(context ? [{ role: 'system', content: `Current app context: ${context}` }] : []),
+      ...messages,
+    ],
+    max_tokens: 300,
+    temperature: 0.5,
+  });
+
+  return {
+    reply: response.choices[0]?.message?.content?.trim() || fallback,
+    source: 'openai',
+  };
+};
 
 const COMPLEXITY_FALLBACKS = {
   twoSum: {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
     approaches: [
-      { name: 'Brute Force', complexity: 'O(n²) time, O(1) space', description: 'Try every pair of elements and check if they sum to target.' },
+      { name: 'Brute Force', complexity: 'O(n^2) time, O(1) space', description: 'Try every pair of elements and check if they sum to target.' },
       { name: 'Hash Map (Optimal)', complexity: 'O(n) time, O(n) space', description: 'Store each number in a hash map and look up the complement in O(1).' },
     ],
     explanation: 'The optimal approach uses a hash map to find the complement of each element in a single pass.',
@@ -64,7 +92,7 @@ const COMPLEXITY_FALLBACKS = {
     timeComplexity: 'O(?)',
     spaceComplexity: 'O(?)',
     approaches: [
-      { name: 'Brute Force', complexity: 'O(n²) time, O(1) space', description: 'Nested loops checking all pairs or combinations.' },
+      { name: 'Brute Force', complexity: 'O(n^2) time, O(1) space', description: 'Nested loops checking all pairs or combinations.' },
       { name: 'Optimized', complexity: 'O(n log n) time, O(1) space', description: 'Sorting or divide-and-conquer to reduce comparisons.' },
       { name: 'Hash/DP', complexity: 'O(n) time, O(n) space', description: 'Trade space for time using a hash table or memoization.' },
     ],
@@ -73,19 +101,13 @@ const COMPLEXITY_FALLBACKS = {
   },
 };
 
-/**
- * Analyses the user's code for time/space complexity and suggests alternative
- * approaches. Returns a structured JSON object parsed from the model response.
- */
 export const analyzeComplexity = async ({ title, description, code, language, difficulty, functionName }) => {
   const client = getOpenAI();
 
-  // ── Fallback when no API key is configured ──────────────────────────────────
   if (!client) {
     const base = COMPLEXITY_FALLBACKS[functionName] || COMPLEXITY_FALLBACKS.default;
     const missingKeyMessage = 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable AI-powered analysis.';
 
-    // Try to guess complexity from the user's code with simple heuristics
     let timeComplexity = base.timeComplexity;
     let spaceComplexity = base.spaceComplexity;
 
@@ -95,10 +117,10 @@ export const analyzeComplexity = async ({ title, description, code, language, di
       const usesRecursion = new RegExp(`${functionName || 'function'}[^(]*\\(`).test(code.slice(code.indexOf('{') + 1));
       const usesSort = /\.sort\(|Arrays\.sort|sort\(/.test(code);
 
-      if (nestedLoops >= 2) timeComplexity = 'O(n²)';
+      if (nestedLoops >= 2) timeComplexity = 'O(n^2)';
       else if (nestedLoops === 1) timeComplexity = 'O(n)';
       else if (usesSort) timeComplexity = 'O(n log n)';
-      else if (usesRecursion) timeComplexity = 'O(2ⁿ) or O(n) with memo';
+      else if (usesRecursion) timeComplexity = 'O(2^n) or O(n) with memo';
 
       if (usesMap) spaceComplexity = 'O(n)';
       else if (usesRecursion) spaceComplexity = 'O(n) call stack';
@@ -107,7 +129,6 @@ export const analyzeComplexity = async ({ title, description, code, language, di
     return { ...base, timeComplexity, spaceComplexity, note: missingKeyMessage };
   }
 
-  // ── OpenAI analysis ─────────────────────────────────────────────────────────
   const systemPrompt = `You are an expert DSA coach. Analyze the user's code and respond ONLY with valid JSON matching this exact schema:
 {
   "timeComplexity": "O(...)",
@@ -153,7 +174,6 @@ Analyze the time and space complexity of the code above. If the code is empty or
     const parsed = JSON.parse(raw);
     return { ...parsed, source: 'openai' };
   } catch (err) {
-    // JSON parse failure or API error — return structured fallback
     const base = COMPLEXITY_FALLBACKS.default;
     return { ...base, explanation: `Analysis unavailable: ${err.message}`, source: 'error', note: 'OpenAI request failed. Check the server logs and API key configuration.' };
   }

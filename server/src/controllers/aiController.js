@@ -1,7 +1,24 @@
 import Problem from '../models/Problem.js';
-import { generateHint, analyzeComplexity } from '../../config/openai.js';
+import { chatWithTutor, generateHint, analyzeComplexity } from '../../config/openai.js';
 
-// ─── AI Hint ───────────────────────────────────────────────────────────────────
+export const chat = async (req, res) => {
+  try {
+    const { messages = [], context = '' } = req.body;
+    const safeMessages = messages
+      .filter((message) => ['user', 'assistant'].includes(message?.role) && typeof message.content === 'string')
+      .slice(-12)
+      .map((message) => ({ role: message.role, content: message.content.slice(0, 4000) }));
+
+    if (!safeMessages.some((message) => message.role === 'user')) {
+      return res.status(400).json({ message: 'Send a question to start a conversation.' });
+    }
+
+    const result = await chatWithTutor({ messages: safeMessages, context: String(context).slice(0, 1000) });
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const getHint = async (req, res) => {
   try {
@@ -21,8 +38,6 @@ export const getHint = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// ─── Complexity & Approach Analysis ───────────────────────────────────────────
 
 export const getAnalysis = async (req, res) => {
   try {

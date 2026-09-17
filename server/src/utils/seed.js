@@ -32,7 +32,7 @@ const problems = [
       { input: { nums: [3, 2, 4], target: 6 }, expected: [1, 2] },
       { input: { nums: [3, 3], target: 6 }, expected: [0, 1] },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Binary Search',
@@ -55,7 +55,7 @@ const problems = [
       { input: { nums: [-1, 0, 3, 5, 9, 12], target: 9 }, expected: 4 },
       { input: { nums: [-1, 0, 3, 5, 9, 12], target: 2 }, expected: -1 },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Valid Parentheses',
@@ -80,7 +80,7 @@ const problems = [
       { input: { s: '()[]{}' }, expected: true },
       { input: { s: '(]' }, expected: false },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Maximum Subarray',
@@ -104,7 +104,7 @@ const problems = [
       { input: { nums: [1] }, expected: 1 },
       { input: { nums: [5, 4, -1, 7, 8] }, expected: 23 },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Merge Two Sorted Lists',
@@ -127,7 +127,7 @@ const problems = [
       { input: { list1: [1, 2, 4], list2: [1, 3, 4] }, expected: [1, 1, 2, 3, 4, 4] },
       { input: { list1: [], list2: [] }, expected: [] },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Number of Islands',
@@ -150,7 +150,7 @@ const problems = [
       { input: { grid: [['1', '1', '1', '1', '0'], ['1', '1', '0', '1', '0'], ['1', '1', '0', '0', '0'], ['0', '0', '0', '0', '0']] }, expected: 1 },
       { input: { grid: [['1', '1', '0', '0', '0'], ['1', '1', '0', '0', '0'], ['0', '0', '1', '0', '0'], ['0', '0', '0', '1', '1']] }, expected: 3 },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Fibonacci Number',
@@ -176,7 +176,7 @@ const problems = [
       { input: { n: 4 }, expected: 3 },
       { input: { n: 10 }, expected: 55 },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Valid Palindrome',
@@ -201,7 +201,7 @@ const problems = [
       { input: { s: 'race a car' }, expected: false },
       { input: { s: ' ' }, expected: true },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Climbing Stairs',
@@ -225,7 +225,7 @@ const problems = [
       { input: { n: 3 }, expected: 3 },
       { input: { n: 5 }, expected: 8 },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Single Number',
@@ -250,7 +250,7 @@ const problems = [
       { input: { nums: [4, 1, 2, 1, 2] }, expected: 4 },
       { input: { nums: [1] }, expected: 1 },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Reverse String',
@@ -273,7 +273,7 @@ const problems = [
       { input: { s: ['h', 'e', 'l', 'l', 'o'] }, expected: ['o', 'l', 'l', 'e', 'h'] },
       { input: { s: ['H', 'a', 'n', 'n', 'a', 'h'] }, expected: ['h', 'a', 'n', 'n', 'a', 'H'] },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
   {
     title: 'Longest Common Prefix',
@@ -297,7 +297,7 @@ const problems = [
       { input: { strs: ['dog', 'racecar', 'car'] }, expected: '' },
       { input: { strs: ['interview', 'inter', 'internal'] }, expected: 'inter' },
     ],
-    languages: ['JavaScript', 'Java', 'C++'],
+    languages: ['JavaScript', 'Java', 'C', 'C++', 'Python'],
   },
 ];
 

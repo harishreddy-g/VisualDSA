@@ -12,7 +12,7 @@ const problemSchema = new mongoose.Schema({
   functionName: { type: String, required: true },
   starterCode: { type: Map, of: String, default: {} },
   testCases: [{ input: mongoose.Schema.Types.Mixed, expected: mongoose.Schema.Types.Mixed }],
-  languages: [{ type: String, default: ['JavaScript', 'Java', 'C++'] }],
+  languages: [{ type: String, default: ['JavaScript', 'Java', 'C', 'C++', 'Python'] }],
 }, { timestamps: true });
 
 export default mongoose.model('Problem', problemSchema);

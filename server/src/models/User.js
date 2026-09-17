@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
   bookmarks: [{ type: String }],
   resetToken: { type: String, default: '' },
   resetTokenExpiry: { type: Date, default: null },
+  emailVerified: { type: Boolean, default: false },
+  verificationCodeHash: { type: String, default: '' },
+  verificationCodeExpiry: { type: Date, default: null },
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

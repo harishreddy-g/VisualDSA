@@ -1,9 +1,9 @@
 import express from 'express';
 import { getProgress, upsertProgress } from '../controllers/progressController.js';
-import { protect } from '../middleware/auth.js';
+import { protect, protectSelfOrAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
-router.get('/:userId', protect, getProgress);
-router.put('/:userId', protect, upsertProgress);
+router.get('/:userId', protect, protectSelfOrAdmin, getProgress);
+router.put('/:userId', protect, protectSelfOrAdmin, upsertProgress);
 
 export default router;

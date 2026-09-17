@@ -28,35 +28,35 @@ export default function StackVisualizer() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+      <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
         <h2 className="text-3xl font-bold text-white">Stack Visualizer</h2>
         <p className="mt-2 text-slate-300">Push, pop, and peek operations update the live stack container.</p>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+        <article className="rounded-lg border border-slate-800 bg-slate-900/80 p-6">
           <div className="mb-4 flex flex-wrap gap-3">
-            <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Value" className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
-            <button onClick={push} className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">Push</button>
-            <button onClick={pop} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Pop</button>
-            <button onClick={peek} className="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Peek</button>
+            <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Value" className="rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-100" />
+            <button onClick={push} className="rounded-lg bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950">Push</button>
+            <button onClick={pop} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Pop</button>
+            <button onClick={peek} className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100">Peek</button>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-            <div className="mx-auto flex min-h-[220px] w-full max-w-xs flex-col-reverse rounded-3xl border border-cyan-400/30 bg-slate-900 p-4 shadow-inner shadow-cyan-950/30">
+          <div className="rounded-lg border border-slate-800 bg-slate-950 p-4">
+            <div className="mx-auto flex min-h-[220px] w-full max-w-xs flex-col-reverse rounded-lg border border-cyan-400/30 bg-slate-900 p-4 shadow-inner shadow-cyan-950/30">
               {stack.length === 0 && <p className="text-center text-slate-400">Empty stack</p>}
               {stack.map((item, index) => (
-                <div key={`${item}-${index}`} className="mb-2 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-center text-sm font-semibold text-slate-100">{item}</div>
+                <div key={`${item}-${index}`} className="mb-2 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-center text-sm font-semibold text-slate-100">{item}</div>
               ))}
             </div>
           </div>
           <p className="mt-4 text-sm text-cyan-100">{message}</p>
         </article>
 
-        <aside className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
+        <aside className="rounded-lg border border-slate-800 bg-slate-900/80 p-6 text-slate-200">
           <h3 className="text-xl font-semibold text-white">Stack Rules</h3>
           <div className="mt-4 space-y-3 text-sm text-slate-300">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">LIFO: The last pushed value is always the next to pop.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">Top element is shown from the last item in the stack.</div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">LIFO: The last pushed value is always the next to pop.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">Top element is shown from the last item in the stack.</div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-4">
               <h4 className="text-sm font-semibold text-cyan-100">Pseudocode</h4>
               <pre className="mt-2 whitespace-pre-wrap text-xs text-slate-200">{Object.entries(stackInfo).map(([name, info]) => `// ${name}\n${info.pseudocode.join('\n')}`).join('\n\n')}</pre>
             </div>
