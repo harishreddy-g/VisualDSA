@@ -1,12 +1,12 @@
 import Problem from '../models/Problem.js';
-import { chatWithTutor, generateHint, analyzeComplexity } from '../../config/openai.js';
+import { chatWithTutor, generateHint, analyzeComplexity } from '../../config/gemini.js';
 
 export const chat = async (req, res) => {
   try {
     const { messages = [], context = '' } = req.body;
     const safeMessages = messages
       .filter((message) => ['user', 'assistant'].includes(message?.role) && typeof message.content === 'string')
-      .slice(-12)
+      .slice(-8)
       .map((message) => ({ role: message.role, content: message.content.slice(0, 4000) }));
 
     if (!safeMessages.some((message) => message.role === 'user')) {

@@ -23,7 +23,7 @@ app.get('/api/health', (_req, res) => res.json({
   service: 'DSAFlow API',
   redis: Boolean(process.env.REDIS_URL),
   solr: Boolean(process.env.SOLR_URL),
-  openai: Boolean(process.env.OPENAI_API_KEY),
+  aiProvider: process.env.GEMINI_API_KEY ? 'gemini' : null,
   mail: isMailConfigured(),
 }));
 

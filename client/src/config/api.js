@@ -13,7 +13,11 @@ export const apiFetch = async (path, options = {}) => {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.message || 'Request failed');
+    if (response.status === 401 && token) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+    throw new Error(response.status === 401 ? 'Your session expired. Please sign in again.' : data.message || 'Request failed');
   }
 
   return data;

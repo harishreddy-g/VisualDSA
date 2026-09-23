@@ -41,9 +41,9 @@ const awardXP = async (stats, xp, problem) => {
 
 export const getMyStats = async (req, res) => {
   try {
-    let stats = await UserStats.findOne({ userId: req.user._id });
+    let stats = await UserStats.findOne({ userId: req.user.id });
     if (!stats) {
-      stats = await UserStats.create({ userId: req.user._id });
+      stats = await UserStats.create({ userId: req.user.id });
     }
 
     res.json({

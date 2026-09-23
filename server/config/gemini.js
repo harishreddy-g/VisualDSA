@@ -1,30 +1,54 @@
-import OpenAI from 'openai';
+const MODEL = 'gemini-3-flash-preview';
 
-let openai = null;
-
-export const getOpenAI = () => {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
-  const looksLikePlaceholder = !apiKey || apiKey.includes('your_openai') || apiKey.includes('your_ope') || apiKey.includes('example');
-
-  if (looksLikePlaceholder) return null;
-  if (!openai) {
-    openai = new OpenAI({ apiKey });
-  }
-  return openai;
+const getGeminiKey = () => {
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  return apiKey && !apiKey.includes('example') ? apiKey : null;
 };
 
+const generateContent = async ({ messages, model = MODEL, max_tokens, temperature, json }) => {
+  const apiKey = getGeminiKey();
+  if (!apiKey) return null;
+
+  const systemMessages = messages.filter((message) => message.role === 'system').map((message) => message.content);
+  const contents = messages
+    .filter((message) => message.role !== 'system')
+    .map((message) => ({
+      role: message.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: message.content }],
+    }));
+
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...(systemMessages.length ? { systemInstruction: { parts: [{ text: systemMessages.join('\n\n') }] } } : {}),
+      contents,
+      generationConfig: {
+        maxOutputTokens: max_tokens,
+        temperature,
+        thinkingConfig: { thinkingBudget: 0 },
+        ...(json ? { responseMimeType: 'application/json' } : {}),
+      },
+    }),
+  });
+
+  if (!response.ok) throw new Error(`Gemini request failed (${response.status})`);
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('') || '';
+};
+
+export const getGemini = () => getGeminiKey();
+
 export const generateHint = async ({ title, description, code, difficulty }) => {
-  const client = getOpenAI();
-  if (!client) {
+  if (!getGeminiKey()) {
     return {
       hint: `Think about the constraints for "${title}" (${difficulty}). Break the problem into smaller steps: parse input, apply the core algorithm, and return the expected format.`,
       source: 'fallback',
-      note: 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable AI-generated hints.',
+      note: 'Gemini API key is not configured on the server. Add GEMINI_API_KEY to enable AI-generated hints.',
     };
   }
 
-  const response = await client.chat.completions.create({
-    model: 'gpt-4o-mini',
+  const response = await generateContent({
     messages: [
       {
         role: 'system',
@@ -40,41 +64,47 @@ export const generateHint = async ({ title, description, code, difficulty }) => 
   });
 
   return {
-    hint: response.choices[0]?.message?.content?.trim() || 'Try identifying the pattern first.',
-    source: 'openai',
+    hint: response?.trim() || 'Try identifying the pattern first.',
+    source: 'gemini',
   };
 };
 
 export const chatWithTutor = async ({ messages = '', context = '' }) => {
-  const client = getOpenAI();
   const fallback = 'I can help you learn DSA. Ask me about a pattern, share your approach, or describe the bug you are stuck on. I will guide you with hints before giving away a full solution.';
 
-  if (!client) {
+  if (!getGeminiKey()) {
     return {
       reply: fallback,
       source: 'fallback',
-      note: 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable live tutoring.',
+      note: 'Gemini API key is not configured on the server. Add GEMINI_API_KEY to enable live tutoring.',
     };
   }
 
-  const response = await client.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [
-      {
-        role: 'system',
-        content: 'You are VisualDSA, a patient DSA tutor. Help users understand algorithms through concise explanations, questions, examples, and debugging guidance. Prefer hints and mental models over immediately giving complete solutions. Use Markdown when helpful. Keep responses under 180 words.',
-      },
-      ...(context ? [{ role: 'system', content: `Current app context: ${context}` }] : []),
-      ...messages,
-    ],
-    max_tokens: 300,
-    temperature: 0.5,
-  });
+  try {
+    const response = await generateContent({
+      messages: [
+        {
+          role: 'system',
+          content: 'You are VisualDSA, a patient DSA tutor. Explain concepts with concise hints, mental models, or debugging guidance. Use Markdown when helpful. Answer in no more than 120 words, and always finish your explanation with complete sentences.',
+        },
+        ...(context ? [{ role: 'system', content: `Current app context: ${context}` }] : []),
+        ...messages,
+      ],
+      max_tokens: 500,
+      temperature: 0.5,
+    });
 
-  return {
-    reply: response.choices[0]?.message?.content?.trim() || fallback,
-    source: 'openai',
-  };
+    return {
+      reply: response?.trim() || fallback,
+      source: 'gemini',
+    };
+  } catch (error) {
+    return {
+      reply: fallback,
+      source: 'fallback',
+      note: `Gemini request failed: ${error.message}`,
+    };
+  }
 };
 
 const COMPLEXITY_FALLBACKS = {
@@ -96,17 +126,15 @@ const COMPLEXITY_FALLBACKS = {
       { name: 'Optimized', complexity: 'O(n log n) time, O(1) space', description: 'Sorting or divide-and-conquer to reduce comparisons.' },
       { name: 'Hash/DP', complexity: 'O(n) time, O(n) space', description: 'Trade space for time using a hash table or memoization.' },
     ],
-    explanation: 'Add your OpenAI API key to get AI-powered complexity analysis tailored to your specific code.',
+    explanation: 'Add your Gemini API key to get AI-powered complexity analysis tailored to your specific code.',
     source: 'fallback',
   },
 };
 
 export const analyzeComplexity = async ({ title, description, code, language, difficulty, functionName }) => {
-  const client = getOpenAI();
-
-  if (!client) {
+  if (!getGeminiKey()) {
     const base = COMPLEXITY_FALLBACKS[functionName] || COMPLEXITY_FALLBACKS.default;
-    const missingKeyMessage = 'OpenAI API key is not configured on the server. Add OPENAI_API_KEY to enable AI-powered analysis.';
+    const missingKeyMessage = 'Gemini API key is not configured on the server. Add GEMINI_API_KEY to enable AI-powered analysis.';
 
     let timeComplexity = base.timeComplexity;
     let spaceComplexity = base.spaceComplexity;
@@ -142,7 +170,7 @@ export const analyzeComplexity = async ({ title, description, code, language, di
     }
   ],
   "codeReview": "1-2 sentences of specific feedback on the user's code style, correctness, or edge cases.",
-  "source": "openai"
+  "source": "gemini"
 }
 Include 2-3 approaches ordered from brute force to optimal. Do not include any text outside the JSON.`;
 
@@ -159,22 +187,21 @@ ${code || '// (no code written yet)'}
 Analyze the time and space complexity of the code above. If the code is empty or incomplete, analyze the optimal approach instead.`;
 
   try {
-    const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
+    const response = await generateContent({
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       max_tokens: 600,
       temperature: 0.2,
-      response_format: { type: 'json_object' },
+      json: true,
     });
 
-    const raw = response.choices[0]?.message?.content?.trim() || '{}';
+    const raw = response?.trim() || '{}';
     const parsed = JSON.parse(raw);
-    return { ...parsed, source: 'openai' };
+    return { ...parsed, source: 'gemini' };
   } catch (err) {
     const base = COMPLEXITY_FALLBACKS.default;
-    return { ...base, explanation: `Analysis unavailable: ${err.message}`, source: 'error', note: 'OpenAI request failed. Check the server logs and API key configuration.' };
+    return { ...base, explanation: `Analysis unavailable: ${err.message}`, source: 'error', note: 'Gemini request failed. Check the Gemini API key configuration.' };
   }
 };
